@@ -147,6 +147,26 @@
          * */
         form.on('select(selectIndex)', function(data){
             request.index = data.value;
+
+            $.ajax({
+                url: "/getApiInfoByIndex.do",
+                type: "POST",
+                data: {"index":request.index},
+                success: function (data) {
+                    console.log(data);
+                    if(data.code === '0000'){
+                        if(!$.isEmptyObject(data.data)){
+                            var apiInfo = data.data;
+                            layer.open({
+                                title: '警告'
+                                ,content: '该接口序号已被占用，请先注销。api:'+apiInfo.api+"，requestMethod:"+apiInfo.requestMethod
+                            });
+                        }
+                    }else{
+                        layer.msg(data.msg);
+                    }
+                }
+            });
         });
 
         form.on('select(selectRequestMethod)', function(data){

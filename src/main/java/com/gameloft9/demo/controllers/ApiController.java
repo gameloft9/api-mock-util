@@ -1,5 +1,6 @@
 package com.gameloft9.demo.controllers;
 
+import com.gameloft9.demo.beans.ApiBean;
 import com.gameloft9.demo.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * 动态api处理controller，
  * 目前支持10个api注册，可手动添加
+ * todo // 方法能动态生成就好了，就不用手动添加了。
  * Created by gameloft9 on 2018/8/9.
  */
 @Controller
@@ -16,52 +18,62 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ApiController {
     @ResponseBody
     public String index1() {
-        return getReturnMsg(Constants.msgs[1]);
+        ApiBean apiBean = Constants.requestMappings.get("1");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index2() {
-        return getReturnMsg(Constants.msgs[2]);
+        ApiBean apiBean = Constants.requestMappings.get("2");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index3() {
-        return getReturnMsg(Constants.msgs[3]);
+        ApiBean apiBean = Constants.requestMappings.get("3");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index4() {
-        return getReturnMsg(Constants.msgs[4]);
+        ApiBean apiBean = Constants.requestMappings.get("4");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index5() {
-        return getReturnMsg(Constants.msgs[5]);
+        ApiBean apiBean = Constants.requestMappings.get("5");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index6() {
-        return getReturnMsg(Constants.msgs[6]);
+        ApiBean apiBean = Constants.requestMappings.get("6");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index7() {
-        return getReturnMsg(Constants.msgs[7]);
+        ApiBean apiBean = Constants.requestMappings.get("7");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index8() {
-        return getReturnMsg(Constants.msgs[8]);
+        ApiBean apiBean = Constants.requestMappings.get("8");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index9() {
-        return getReturnMsg(Constants.msgs[9]);
+        ApiBean apiBean = Constants.requestMappings.get("9");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     @ResponseBody
     public String index10() {
-        return getReturnMsg(Constants.msgs[10]);
+        ApiBean apiBean = Constants.requestMappings.get("10");
+        return getReturnMsg(apiBean.getMsg());
     }
 
     /**

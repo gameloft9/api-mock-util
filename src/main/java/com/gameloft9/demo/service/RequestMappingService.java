@@ -1,5 +1,6 @@
 package com.gameloft9.demo.service;
 
+import com.gameloft9.demo.beans.ApiBean;
 import com.gameloft9.demo.controllers.ApiController;
 import com.gameloft9.demo.controllers.PortalController;
 import com.gameloft9.demo.service.api.IRequestMappingService;
@@ -34,10 +35,20 @@ public class RequestMappingService implements IRequestMappingService{
     @Autowired
     WebApplicationContext webApplicationContext;
 
+    public ApiBean getApiInfoByIndex(String index){
+        notBlank(index,"index cant not be null");
+
+        if(Constants.requestMappings.containsKey(index)){
+            return Constants.requestMappings.get(index);
+        }
+
+        return null;
+    }
+
     public boolean hasMethodOccupied(String index){
         notBlank(index,"index cant not be null");
 
-        return StringUtils.isNotBlank(Constants.msgs[Integer.parseInt(index)]);
+        return Constants.requestMappings.containsKey(index);
     }
 
     public boolean hasApiRegistered(String api,String requestMethod){
@@ -59,8 +70,8 @@ public class RequestMappingService implements IRequestMappingService{
         return false;
     }
 
-    public boolean registerApi(String index,String api,String requestMethod,String msg){
-        check(!hasMethodOccupied(index),"该序号方法已经被使用.");
+    public ApiBean registerApi(String index,String api,String requestMethod,String msg){
+        check(!hasMethodOccupied(index),"该序号已经被占用，请先注销api。");
         check(!hasApiRegistered(api,requestMethod),"该api已经注册过了");
 
         RequestMappingHandlerMapping requestMappingHandlerMapping = webApplicationContext.getBean(RequestMappingHandlerMapping.class);
@@ -72,9 +83,14 @@ public class RequestMappingService implements IRequestMappingService{
         RequestMappingInfo mapping_info = new RequestMappingInfo(patternsRequestCondition, requestMethodsRequestCondition, null, null, null, null, null);
         requestMappingHandlerMapping.registerMapping(mapping_info, "apiController", targetMethod); // 注册映射处理
 
-        Constants.msgs[Integer.parseInt(index)] = msg; // 存储返回报文
+        // 保存注册信息到本地
+        ApiBean apiInfo = new ApiBean();
+        apiInfo.setApi(api);
+        apiInfo.setRequestMethod(requestMethod);
+        apiInfo.setMsg(msg);
+        Constants.requestMappings.put(index,apiInfo);
 
-        return true;
+        return apiInfo;
     }
 
     public boolean unregisterApi(String index,String api,String requestMethod){
@@ -89,7 +105,9 @@ public class RequestMappingService implements IRequestMappingService{
 
         requestMappingHandlerMapping.unregisterMapping(mapping_info); // 注销
 
-        Constants.msgs[Integer.parseInt(index)] = ""; // 清空返回报文
+        if(Constants.requestMappings.containsKey(index)){
+            Constants.requestMappings.remove(index);
+        }
 
         return true;
     }

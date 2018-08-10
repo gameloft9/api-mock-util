@@ -1,10 +1,14 @@
 package com.gameloft9.demo.controllers;
 
+import com.gameloft9.demo.beans.ApiBean;
 import com.gameloft9.demo.mgrframework.beans.response.IResult;
 import com.gameloft9.demo.mgrframework.beans.response.ResultBean;
 import com.gameloft9.demo.request.ApiRegisterRequest;
 import com.gameloft9.demo.request.ApiUnregisterRequest;
 import com.gameloft9.demo.service.api.IRequestMappingService;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 
 
@@ -52,7 +57,7 @@ public class PortalController {
     @RequestMapping(value = "/registerApi.do", method = RequestMethod.POST)
     @ResponseBody
     public IResult registerApi(@Valid ApiRegisterRequest request, BindingResult result) {
-        return new ResultBean<Boolean>(requestMappingService.registerApi(request.getIndex(),request.getApi(),request.getRequestMethod(),request.getMsg()));
+        return new ResultBean<ApiBean>(requestMappingService.registerApi(request.getIndex(),request.getApi(),request.getRequestMethod(),request.getMsg()));
     }
 
     /**
@@ -64,6 +69,14 @@ public class PortalController {
         return new ResultBean<Boolean>(requestMappingService.unregisterApi(request.getIndex(),request.getApi(),request.getRequestMethod()));
     }
 
+    /**
+     * 检查接口序号是否已经占用
+     * */
+    @RequestMapping(value = "/getApiInfoByIndex.do", method = RequestMethod.POST)
+    @ResponseBody
+    public IResult getApiInfoByIndex(String index) {
+        return new ResultBean<ApiBean>(requestMappingService.getApiInfoByIndex(index));
+    }
 
     /**
      * 跨域过滤器
